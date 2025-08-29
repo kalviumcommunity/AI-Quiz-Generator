@@ -1,81 +1,83 @@
+
+
 # 📘 AI Quiz Generator
 
-An interactive **AI-powered Quiz Generator** where users can paste any text (article, notes, code explanation, etc.) and automatically generate quizzes with **questions, multiple-choice options, and correct answers**.
+An interactive **AI-powered Quiz Maker** that lets users paste any text (notes, articles, code explanations, etc.) and instantly create quizzes with **multiple-choice questions and correct answers**.
 
 ---
 
-## 🚀 Features
+## 🚀 Key Features
 
-* 📝 **Paste Text** → Input any notes, article, or code snippet.
-* 🤖 **AI Quiz Generation** → AI generates 5–10 MCQs.
-* 🎚 **Difficulty Levels** → Choose Easy / Medium / Hard.
-* 🎯 **Answer Key** → Correct answers are highlighted.
-* 📊 **Prompting Modes**:
+* 📝 **Text Input** → Paste study notes, articles, or code.
+* 🤖 **Automatic Quiz Creation** → AI generates 5–10 MCQs.
+* 🎚 **Difficulty Settings** → Choose Easy / Medium / Hard.
+* 🎯 **Answer Key** → Correct answers are clearly marked.
+* 📊 **Prompting Styles**:
 
-  * **Zero-Shot** → Generate quiz directly.
-  * **One-Shot** → Guided with one example Q\&A.
-  * **Multi-Shot** → Guided with multiple examples.
-  * **Chain-of-Thought** → AI explains reasoning behind quiz creation.
-* 📥 **Export Option** → Save quiz as `.txt` or `.pdf`.
-* ⚡ Built with **Streamlit + Groq API (LLaMA 3.1)**
-
----
-
-## 🧠 GenAI Concepts Used
-
-1. **System & User Prompts** → Define AI as quiz master.
-2. **Zero-shot prompting** → Generate quiz from raw text.
-3. **One-shot prompting** → Provide a sample Q\&A to guide.
-4. **Multi-shot prompting** → Provide multiple examples.
-5. **Chain-of-Thought prompting** → Step-by-step reasoning (optional).
-6. **Tokens & Tokenization** → Track usage & optimize costs.
-7. **LLM Parameters** → Temperature, Top-p, Max Tokens.
-8. **Structured Output** → `{question, options, answer}` format.
+  * **Zero-Shot** → Direct quiz generation.
+  * **One-Shot** → Guided with one sample Q\&A.
+  * **Multi-Shot** → Guided with several examples.
+  * **Chain-of-Thought** → AI explains its reasoning while creating questions.
+* 📥 **Export Options** → Download quiz as `.txt` or `.pdf`.
+* ⚡ Built using **Streamlit + Groq API (LLaMA 3.1)**.
 
 ---
 
-## 📂 Project Structure
+## 🧠 GenAI Concepts Applied
+
+1. **System & User Prompts** → Define AI as the quiz master.
+2. **Zero-Shot Prompting** → Generate questions from text without examples.
+3. **One-Shot Prompting** → Use one Q\&A example as guidance.
+4. **Multi-Shot Prompting** → Provide multiple examples to shape responses.
+5. **Chain-of-Thought Prompting** → Step-by-step reasoning (optional).
+6. **Tokens & Tokenization** → Track usage and reduce costs.
+7. **LLM Parameters** → Control creativity with Temperature, Top-p, and Max Tokens.
+8. **Structured Output** → Results in `{question, options, answer}` format.
+
+---
+
+## 📂 Folder Layout
 
 ```
 AI-Quiz-Generator/
-│-- app.py                # Main Streamlit app
+│-- app.py               # Main Streamlit application
 │-- src/
-│   ├── groq_client.py    # Handles Groq API calls + prompting
-│-- requirements.txt      # Dependencies
-│-- .env                  # Store GROQ_API_KEY here
-│-- README.md             # Project documentation
+│   ├── groq_client.py   # Groq API calls + prompt handling
+│-- requirements.txt     # Dependencies
+│-- .env                 # GROQ_API_KEY stored here
+│-- README.md            # Documentation
 ```
 
 ---
 
-## ⚙️ Setup & Installation
+## ⚙️ Installation Guide
 
-### 1️⃣ Clone Repo
+### 1️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/yourusername/ai-quiz-generator.git
 cd ai-quiz-generator
 ```
 
-### 2️⃣ Create Virtual Env & Install Requirements
+### 2️⃣ Set Up Virtual Environment & Install Packages
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # Mac/Linux
-venv\Scripts\activate     # Windows
+source venv/bin/activate   # Mac/Linux
+venv\Scripts\activate      # Windows
 
 pip install -r requirements.txt
 ```
 
-### 3️⃣ Add Environment Variable
+### 3️⃣ Configure Environment Variable
 
-Create a `.env` file:
+Create a `.env` file in the root folder and add:
 
 ```
 GROQ_API_KEY=your_groq_api_key_here
 ```
 
-### 4️⃣ Run the App
+### 4️⃣ Start the App
 
 ```bash
 streamlit run app.py
@@ -83,22 +85,22 @@ streamlit run app.py
 
 ---
 
-## 🖼️ Example Usage
+## 🖼️ Sample Run
 
 **Input Text:**
 
-> "Photosynthesis is the process by which plants convert sunlight into energy. Chlorophyll absorbs sunlight, producing glucose and oxygen."
+> "Photosynthesis is the process where plants use sunlight to produce energy. Chlorophyll captures light, resulting in glucose and oxygen."
 
-**AI-Generated Quiz:**
+**Generated Quiz:**
 
-1. What pigment is essential for photosynthesis?
+1. Which pigment is key for photosynthesis?
 
    * a) Hemoglobin
    * b) Chlorophyll ✅
    * c) Melanin
    * d) Keratin
 
-2. What is one main product of photosynthesis?
+2. Which of these is a product of photosynthesis?
 
    * a) Carbon dioxide
    * b) Glucose ✅
@@ -107,14 +109,16 @@ streamlit run app.py
 
 ---
 
-## 📌 Use Cases
+## 📌 Who Can Use This
 
-* 🎓 Students → Quickly make quizzes from notes.
-* 👨‍🏫 Teachers → Generate practice tests in seconds.
-* 💻 Developers → Create technical quizzes from docs/code.
+* 🎓 **Students** → Turn notes into quick quizzes.
+* 👨‍🏫 **Teachers** → Create practice tests instantly.
+* 💻 **Developers** → Build quizzes from docs or code samples.
 
 ---
 
 ## 📜 License
 
 MIT License © 2025
+
+---
