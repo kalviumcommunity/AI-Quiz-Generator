@@ -9,10 +9,7 @@ client = Groq(api_key=GROQ_API_KEY)
 # ==============================
 
 def build_zero_shot_prompt(text, num_questions):
-    """
-    Zero-Shot: AI generates quiz questions without any examples.
-    Only the user text and instructions are given.
-    """
+    """Zero-Shot: AI generates quiz questions without any examples."""
     return f"""
 You are an AI tutor. 
 Generate {num_questions} multiple-choice quiz questions from the text below.
@@ -22,12 +19,8 @@ Text:
 {text}
 """
 
-
 def build_one_shot_prompt(text, num_questions):
-    """
-    One-Shot: AI is given a single example to guide its response.
-    Helps AI understand format and style before answering.
-    """
+    """One-Shot: AI is given a single example to guide its response."""
     example = """
 Q: What is the capital of France?
 A) Berlin
@@ -48,12 +41,8 @@ Text:
 {text}
 """
 
-
 def build_multi_shot_prompt(text, num_questions):
-    """
-    Multi-Shot: AI is given multiple examples to improve consistency.
-    This helps AI learn reasoning style and expected format.
-    """
+    """Multi-Shot: AI is given multiple examples to improve consistency."""
     examples = """
 Example 1:
 Q: What is 2 + 2?
@@ -83,12 +72,8 @@ Text:
 {text}
 """
 
-
 def build_dynamic_prompt(text, subject, num_questions):
-    """
-    Dynamic Prompting: AI adapts based on subject chosen by user.
-    Example: If subject is Math, AI acts as a math tutor.
-    """
+    """Dynamic Prompting: AI adapts based on subject chosen by user."""
     return f"""
 You are an AI tutor specializing in {subject}.
 Generate {num_questions} quiz questions for {subject} based on the text below.
@@ -98,12 +83,8 @@ Text:
 {text}
 """
 
-
 def build_cot_prompt(text, num_questions):
-    """
-    Chain-of-Thought (CoT): AI must explain its reasoning step by step.
-    Useful for complex subjects like math or science.
-    """
+    """Chain-of-Thought (CoT): AI must explain its reasoning step by step."""
     return f"""
 You are an AI tutor who explains reasoning step by step.
 Generate {num_questions} multiple-choice quiz questions from the text below.
@@ -122,31 +103,30 @@ def get_ai_response(prompt, stream=False):
     Sends the prompt to the Groq LLM and gets the AI's response.
     - Supports streaming responses (token by token).
     - Uses 'llama-3.1-8b-instant' model.
-    - Logs token usage when streaming is off.
+    - Logs token usage for cost/performance monitoring.
     """
     if stream:
         # Streaming response: AI outputs text in chunks
         completion = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.3,         # Controls creativity (lower = more focused)
-            max_completion_tokens=800, # Limit on generated tokens
-            top_p=1,                 # Nucleus sampling (controls diversity)
-            stream=True,             # Enable streaming
+            temperature=0.3,
+            max_completion_tokens=800,
+            top_p=1,
+            stream=True,
         )
 
         response_text = ""
         for chunk in completion:
-            # Each chunk contains partial text
             delta = chunk.choices[0].delta
             content = delta.get("content", "")
-            print(content, end="", flush=True)  # Print live output
+            print(content, end="", flush=True)  # live output
             response_text += content
-        print()  # Newline after streaming completes
+        print()  
         return response_text
 
     else:
-        # Non-streaming (standard) response: AI sends full text at once
+        # Standard (non-streaming) response
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
@@ -154,10 +134,13 @@ def get_ai_response(prompt, stream=False):
             max_completion_tokens=800,
         )
 
-        # Print tokens used (for cost monitoring)
+        # ✅ Log token usage clearly
         if hasattr(response, "usage"):
-            tokens_used = response.usage.total_tokens
-            print(f"✅ Tokens used: {tokens_used}")
+            print("📊 Token Usage Stats:")
+            print(f"   📝 Prompt tokens     : {response.usage.prompt_tokens}")
+            print(f"   💡 Completion tokens : {response.usage.completion_tokens}")
+            print(f"   🔢 Total tokens      : {response.usage.total_tokens}")
+            print("-" * 40)
 
-        # Return final AI response text
+        # Return the AI's final text
         return response.choices[0].message.content
