@@ -1,17 +1,17 @@
 from groq import Groq
 from src.config import GROQ_API_KEY
 
-# Initialize Groq client
+# Initialize Groq client using API key from config file
 client = Groq(api_key=GROQ_API_KEY)
 
 # ==============================
 # Prompt Builders
 # ==============================
 
-
 def build_zero_shot_prompt(text, num_questions):
     """
-    Zero-Shot: AI generates quiz questions without examples.
+    Zero-Shot: AI generates quiz questions without any examples.
+    Only the user text and instructions are given.
     """
     return f"""
 You are an AI tutor. 
@@ -25,7 +25,8 @@ Text:
 
 def build_one_shot_prompt(text, num_questions):
     """
-    One-Shot: AI is given a single example.
+    One-Shot: AI is given a single example to guide its response.
+    Helps AI understand format and style before answering.
     """
     example = """
 Q: What is the capital of France?
@@ -50,7 +51,8 @@ Text:
 
 def build_multi_shot_prompt(text, num_questions):
     """
-    Multi-Shot: AI is given multiple examples.
+    Multi-Shot: AI is given multiple examples to improve consistency.
+    This helps AI learn reasoning style and expected format.
     """
     examples = """
 Example 1:
@@ -85,6 +87,7 @@ Text:
 def build_dynamic_prompt(text, subject, num_questions):
     """
     Dynamic Prompting: AI adapts based on subject chosen by user.
+    Example: If subject is Math, AI acts as a math tutor.
     """
     return f"""
 You are an AI tutor specializing in {subject}.
@@ -98,7 +101,8 @@ Text:
 
 def build_cot_prompt(text, num_questions):
     """
-    Chain-of-Thought: AI must explain reasoning step by step.
+    Chain-of-Thought (CoT): AI must explain its reasoning step by step.
+    Useful for complex subjects like math or science.
     """
     return f"""
 You are an AI tutor who explains reasoning step by step.
@@ -113,35 +117,36 @@ Text:
 # API Caller
 # ==============================
 
-
 def get_ai_response(prompt, stream=False):
     """
-    Calls the Groq LLM with the provided prompt.
-    Supports streaming with the smaller 8B instant model.
-    Logs tokens if stream=False.
+    Sends the prompt to the Groq LLM and gets the AI's response.
+    - Supports streaming responses (token by token).
+    - Uses 'llama-3.1-8b-instant' model.
+    - Logs token usage when streaming is off.
     """
     if stream:
-        # Streaming response
+        # Streaming response: AI outputs text in chunks
         completion = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.3,
-            max_completion_tokens=800,
-            top_p=1,
-            stream=True,
+            temperature=0.3,         # Controls creativity (lower = more focused)
+            max_completion_tokens=800, # Limit on generated tokens
+            top_p=1,                 # Nucleus sampling (controls diversity)
+            stream=True,             # Enable streaming
         )
 
         response_text = ""
         for chunk in completion:
+            # Each chunk contains partial text
             delta = chunk.choices[0].delta
             content = delta.get("content", "")
-            print(content, end="", flush=True)
+            print(content, end="", flush=True)  # Print live output
             response_text += content
-        print()  # newline after streaming
+        print()  # Newline after streaming completes
         return response_text
 
     else:
-        # Standard response
+        # Non-streaming (standard) response: AI sends full text at once
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
@@ -149,8 +154,10 @@ def get_ai_response(prompt, stream=False):
             max_completion_tokens=800,
         )
 
+        # Print tokens used (for cost monitoring)
         if hasattr(response, "usage"):
             tokens_used = response.usage.total_tokens
             print(f"✅ Tokens used: {tokens_used}")
 
+        # Return final AI response text
         return response.choices[0].message.content
