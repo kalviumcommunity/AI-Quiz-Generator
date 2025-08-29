@@ -12,9 +12,9 @@ from src.groq_client import (
 # Streamlit Page Config
 # -------------------------------
 st.set_page_config(
-    page_title="AI Quiz & Tutor",
-    page_icon="🧠",
-    layout="wide"
+    page_title="AI Quiz & Tutor",  # Page title in browser
+    page_icon="🧠",                # Page icon
+    layout="wide"                  # Wide layout for better space usage
 )
 
 # -------------------------------
@@ -22,9 +22,7 @@ st.set_page_config(
 # -------------------------------
 with st.sidebar:
     st.title("📘 Project Info")
-    st.markdown("""
-    **AI Personal Tutor + Quiz Generator** 
-    """)
+    st.markdown("""**AI Personal Tutor + Quiz Generator**""")
 
     st.markdown("---")
     st.subheader("⚡ Try Example Inputs")
@@ -37,6 +35,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.subheader("🎯 Select Prompting Strategy")
+    # Radio buttons to choose the prompting method
     prompt_type = st.radio(
         "Prompt Type:",
         ["Zero-Shot", "One-Shot", "Multi-Shot", "Dynamic", "Chain-of-Thought"]
@@ -48,20 +47,26 @@ with st.sidebar:
 st.title("🧑‍🏫 AI Tutor & Quiz Generator")
 st.write("Ask a question, or paste text to generate a quiz with different prompting strategies.")
 
-# Input area
-question = st.text_area("Enter your question or text:")
+# -------------------------------
+# User Input
+# -------------------------------
+question = st.text_area("Enter your question or text:")  # Main input area
 num_questions = st.number_input(
-    "Number of Questions (for Quiz)", min_value=1, max_value=10, value=3)
-subject = st.text_input("Subject (only for Dynamic Prompting)",
-                        placeholder="e.g., Science, History")
-
-submit = st.button("🚀 Generate Answer")
+    "Number of Questions (for Quiz)", min_value=1, max_value=10, value=3
+)  # Only used for quiz generation
+subject = st.text_input(
+    "Subject (only for Dynamic Prompting)",
+    placeholder="e.g., Science, History"
+)  # Dynamic prompting requires subject
+submit = st.button("🚀 Generate Answer")  # Trigger AI response
 
 # -------------------------------
 # Processing
 # -------------------------------
-if submit and question:
-    # Build Prompt
+if submit and question:  # Only process if user clicked submit and entered text
+    # -------------------------------
+    # Build the prompt based on selected strategy
+    # -------------------------------
     if prompt_type == "Zero-Shot":
         prompt = build_zero_shot_prompt("General", question)
     elif prompt_type == "One-Shot":
@@ -75,11 +80,15 @@ if submit and question:
     else:
         prompt = build_zero_shot_prompt("General", question)
 
-    # Call AI
+    # -------------------------------
+    # Call AI and show spinner while processing
+    # -------------------------------
     with st.spinner("🤖 Thinking..."):
         answer = get_ai_response(prompt)
 
+    # -------------------------------
     # Display result
+    # -------------------------------
     st.success("✅ Response Generated!")
     st.markdown("### 📜 Answer / Quiz")
-    st.write(answer)
+    st.write(answer)  # Display the AI’s answer or generated quiz
